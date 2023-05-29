@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
@@ -7,19 +7,12 @@ import { Product, ProductsAPIResponse } from "../types";
 // Por ahora estamos utilizando data mockeada, pero
 // debemos reemplazar esto por información proveniente de la
 // API
-export const data: ProductsAPIResponse = [
-  {
-    id: 1,
-    title: "Mochila con correas",
-    price: 7500,
-    description:
-      "Tu mochila perfecta para el dìa a dìa y salidas de fin de semana. Guarda tu notebook (hasta 15 pulgadas) en la funda acolchada, y protégela de los rayones y golpes",
-    image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-    rating: 4,
-  },
-];
 
-const Home: NextPage = () => {
+interface HomeProps {
+  data: ProductsAPIResponse
+}
+
+const Home: NextPage<HomeProps> = ({data}) => {
   if (!data) return null;
 
   const formatPrice: (price: number) => string = (price) =>
@@ -95,7 +88,20 @@ const Home: NextPage = () => {
   );
 };
 
-// Aquí debemos agregar el método para obtener la información
-// de la API
+export const getServerSideProps : GetServerSideProps = async ({req, res}) => {
+  const response = await fetch("https://ctd-fe3-s3-c9-integracion-tienda-libre-base-six.vercel.app/api/products");
+  const { results } = await response.json();
+
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59",
+  )
+
+  return {
+    props: {
+      results,
+    },
+  };
+};
 
 export default Home;
