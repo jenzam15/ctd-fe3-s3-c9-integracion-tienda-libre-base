@@ -90,7 +90,7 @@ const Home: NextPage<HomeProps> = ({data}) => {
 
 export const getServerSideProps : GetServerSideProps = async ({req, res}) => {
   const response = await fetch("https://ctd-fe3-s3-c9-integracion-tienda-libre-base-six.vercel.app/api/products");
-  const { results } = await response.json();
+  const data = await response.json();
 
   res.setHeader(
     "Cache-Control",
@@ -99,7 +99,7 @@ export const getServerSideProps : GetServerSideProps = async ({req, res}) => {
 
   return {
     props: {
-      results,
+      data,
     },
   };
 };
