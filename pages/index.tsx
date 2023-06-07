@@ -3,6 +3,8 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { Product, ProductsAPIResponse } from "../types";
+import { useRouter } from "next/router";
+import { TEXTS_BY_LANGUAGE, defaultLocale } from "../locale/constants";
 
 // Por ahora estamos utilizando data mockeada, pero
 // debemos reemplazar esto por información proveniente de la
@@ -13,6 +15,14 @@ interface HomeProps {
 }
 
 const Home: NextPage<HomeProps> = ({data}) => {
+
+  const {locale} = useRouter();
+
+const {MAIN} =
+    TEXTS_BY_LANGUAGE[
+      (locale || defaultLocale) as keyof typeof TEXTS_BY_LANGUAGE
+    ];
+    
   if (!data) return null;
 
   const formatPrice: (price: number) => string = (price) =>
@@ -70,7 +80,7 @@ const Home: NextPage<HomeProps> = ({data}) => {
         />
       </Head>
       <main className={styles.main}>
-        <h1>Productos destacados</h1>
+        <h1>{MAIN.PRODUCTS}</h1>
         <div className={styles.grid}>{data.map(renderProductCard)}</div>
       </main>
       <footer className={styles.footer}>
@@ -88,14 +98,12 @@ const Home: NextPage<HomeProps> = ({data}) => {
   );
 };
 
-export const getServerSideProps : GetServerSideProps = async ({req, res}) => {
-  const response = await fetch("https://ctd-fe3-s3-c9-integracion-tienda-libre-base-six.vercel.app/api/products");
-  const data = await response.json();
+export const getServerSideProps : GetServerSideProps = async ({locale}) => {
 
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59",
-  )
+  const baseURL = "http://localhost:3000/"
+ 
+  const response = await fetch(`${baseURL}/api/products/${locale}`);
+  const data = await response.json();
 
   return {
     props: {

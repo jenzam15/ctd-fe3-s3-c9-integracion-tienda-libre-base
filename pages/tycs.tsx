@@ -1,8 +1,10 @@
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { TyC, TyCsAPIResponse } from "../types";
 import styles from "../styles/TYC.module.css";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { TEXTS_BY_LANGUAGE, defaultLocale, locales } from "../locale/constants";
 
 // Por ahora estamos utilizando data mockeada, pero
 // debemos reemplazar esto por información proveniente de la
@@ -14,6 +16,14 @@ interface tycsProps {
 
 
 const TerminosYCondiciones: NextPage<tycsProps > = ({data}) => {
+  
+const {locale} = useRouter();
+
+const {MAIN} =
+    TEXTS_BY_LANGUAGE[
+      (locale || defaultLocale) as keyof typeof TEXTS_BY_LANGUAGE
+    ];
+  
   if (!data) return null;
 
   const { version, tycs } = data;
@@ -34,16 +44,18 @@ const TerminosYCondiciones: NextPage<tycsProps > = ({data}) => {
           content="términos y condiciones de Tienda Libre"
         />
       </Head>
-      <h2>Terminos y Concidiones</h2>
+      <h2>{MAIN.TYCS}</h2>
       <p>Versión: {version}</p>
       {tycs.map(renderTyc)}
     </div>
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps : GetStaticProps = async ({locale}) => {
+
+  const baseURL = "http://localhost:3000/"
  
-  const response = await fetch("https://ctd-fe3-s3-c9-integracion-tienda-libre-base-six.vercel.app/api/tycs");
+  const response = await fetch(`${baseURL}/api/tycs/${locale}`);
   const data = await response.json();
 
   return {
