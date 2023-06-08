@@ -53,7 +53,7 @@ const {MAIN} =
 
 export const getStaticProps : GetStaticProps = async ({locale}) => {
 
-  const baseURL = "https://ctd-fe3-s3-c9-integracion-tienda-libre-base"
+  const baseURL = "http://localhost:3000/"
  
   const response = await fetch(`${baseURL}/api/tycs/${locale}`);
   const data = await response.json();
