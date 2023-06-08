@@ -100,7 +100,7 @@ const {MAIN} =
 
 export const getServerSideProps : GetServerSideProps = async ({locale}) => {
 
-  const baseURL = "http://localhost:3000/"
+  const baseURL = "https://ctd-fe3-s3-c9-integracion-tienda-libre-base"
  
   const response = await fetch(`${baseURL}/api/products/${locale}`);
   const data = await response.json();
