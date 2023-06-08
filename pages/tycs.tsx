@@ -4,7 +4,7 @@ import { TyC, TyCsAPIResponse } from "../types";
 import styles from "../styles/TYC.module.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { TEXTS_BY_LANGUAGE, defaultLocale, locales } from "../locale/constants";
+import { TEXTS_BY_LANGUAGE, defaultLocale } from "../locale/constants";
 
 // Por ahora estamos utilizando data mockeada, pero
 // debemos reemplazar esto por información proveniente de la
